@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSync 2025 | Universal Shareable Engineering Workspace</title>
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Inter Premium Typography Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Awesome Iconography Toolkit -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .editable-active {
+            border: 2px dashed #8b5cf6 !important;
+            background: rgba(139, 92, 246, 0.08) !important;
+            outline: none;
+        }
+        .admin-glow {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.4) !important;
+        }
+    </style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen flex flex-col md:flex-row">
+
+    <!-- HIDDEN GENERIC FILE LOADER COMPONENT -->
+    <input type="file" id="vaultInput" class="hidden" multiple onchange="processVaultFilesUpload(this)">
+
+    <!-- LEFT SIDEBAR & SYSTEM PRIVILEGE PANEL -->
+    <aside class="w-full md:w-80 bg-slate-900/60 backdrop-blur-2xl border-b md:border-b-0 md:border-r border-slate-800/80 p-6 flex flex-col justify-between gap-6 shrink-0 z-50 md:h-screen overflow-y-auto">
+        <div class="space-y-6">
+            
+            <!-- EXECUTABLE PREMIUM PROFILE COMPONENT (WITH ANIMATED AVATAR) -->
+            <div id="profileBox" class="p-4 bg-slate-950/40 border border-slate-800/60 rounded-2xl text-center relative group transition-all">
+                <div class="relative w-24 h-24 mx-auto mb-3">
+                    <!-- Smooth flat-animated vector of a black tech professional -->
+                    <img id="userAvatar" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Felix&backgroundColor=b6e3f4" class="w-full h-full object-cover rounded-2xl border border-slate-800 shadow-xl transition-all bg-slate-800" alt="Animated Avatar">
+                </div>
+                <div class="space-y-1">
+                    <h2 id="profileName" class="font-bold text-base text-white px-2 py-0.5 rounded transition-all">Mohamed Hassan</h2>
+                    <p id="profileCourse" class="text-[11px] text-slate-400 font-medium tracking-wide uppercase px-2 py-0.5 rounded leading-tight">Computer and Communication System Engineering</p>
+                </div>
+            </div>
+
+            <!-- CORE PLATFORM ACTION ROUTERS -->
+            <nav class="space-y-1">
+                <a href="#dashboard-anchor" class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-800 text-white font-medium text-xs transition-all"><i class="fa-solid fa-square-poll-vertical text-violet-400"></i> Workspace Hub</a>
+                <a href="#file-vault-anchor" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/40 text-xs transition-all"><i class="fa-solid fa-folder-open"></i> Project & Reports Vault</a>
+            </nav>
+
+            <!-- CUSTOM DYNAMIC SETTINGS CONTEXT BLOCK -->
+            <div class="p-4 bg-slate-950/30 border border-slate-800/60 rounded-2xl space-y-3">
+                <div class="flex items-center gap-2 text-slate-400"><i class="fa-solid fa-sliders text-xs"></i> <span class="text-[11px] font-bold uppercase tracking-wider">Control Panel Settings</span></div>
+                
+                <div class="space-y-2">
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-500 block mb-1">PORTFOLIO ACCESSIBILITY</label>
+                        <select id="settingVisibility" disabled onchange="mutateGlobalSetting('visibility', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded-lg text-xs p-2 text-slate-300 outline-none cursor-pointer disabled:opacity-40 transition-all">
+                            <option value="public">Public Portfolio View (Everyone)</option>
+                            <option value="private">Private (Restricted Local Access)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-500 block mb-1">PLANNER NOTIFICATION GLOW</label>
+                        <select id="settingGlow" disabled onchange="mutateGlobalSetting('glow', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded-lg text-xs p-2 text-slate-300 outline-none cursor-pointer disabled:opacity-40 transition-all">
+                            <option value="enabled">Active Dynamic Core Border Glow</option>
+                            <option value="disabled">Standard Minimal Contrast Interface</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LINK DISTRIBUTION ENGINE WIDGET -->
+            <div id="shareLinkContainer" class="hidden p-3 bg-violet-950/20 border border-violet-900/40 rounded-2xl space-y-2">
+                <span class="text-[9px] font-bold text-violet-400 uppercase tracking-wider block">Sharable URL Ready</span>
+                <button onclick="copyShareableLinkToClipboard()" class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                    <i class="fa-solid fa-copy"></i> Copy Shareable URL Link
+                </button>
+            </div>
+        </div>
+
+        <!-- AUTH LOCK INFRASTRUCTURE COMPONENT -->
+        <div class="border-t border-slate-800/60 pt-4">
+            <button id="systemAuthBtn" onclick="executeSystemAuthenticationRoutine()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-slate-800 border border-slate-700 hover:border-violet-500 transition-all cursor-pointer">
+                <i id="lockWidgetIcon" class="fa-solid fa-lock text-amber-500"></i>
+                <span id="authWidgetText" class="text-xs font-bold text-slate-200">Unlock Workspace</span>
+            </button>
+            <div id="adminBadgeView" class="hidden mt-2 text-center text-[10px] text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 py-1.5 rounded-lg">
+                <i class="fa-solid fa-user-shield mr-1"></i> ADMIN ACCESS GRANTED
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTENT DISPLAY ROUTER MAPPED WORKSPACE -->
+    <main class="flex-1 p-4 md:p-8 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto" id="dashboard-anchor">
+        
+        <!-- RUNTIME DASHBOARD CORE HEADER BANNER -->
+        <header class="relative overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+                <div class="space-y-2 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-violet-500/10 border border-violet-500/20 rounded-full text-[10px] font-bold text-violet-400 uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span> Multi-Paradigm State Serialization Engine
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Engineering Academic Control Center & Portfolio</h2>
+                    <p class="text-xs md:text-sm text-slate-400 leading-relaxed">
+                        Compiles and presents interactive structural calendars computed natively via Zeller's algorithms. Manage work pipelines, project reports, custom schedules, and interface permissions dynamically inside an encoded cloud-sharable state structure.
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- CALENDAR INTERACTIVE LAYER MATRIX GRAPHICS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- CALENDAR GRID CARD CONTROLLER (7 SPAN UNITS) -->
+            <section class="lg:col-span-7 bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-calendar-alt text-violet-400"></i>
+                        <h3 class="font-bold text-sm text-white uppercase tracking-wider">2025 Calendar Matrix</h3>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-slate-950 border border-slate-800 p-1 rounded-xl">
+                        <button onclick="shiftTargetMonthPointer(-1)" class="p-2 rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                        <span id="currentMonthYearLabel" class="text-xs font-bold px-3 text-slate-200 min-w-[120px] text-center uppercase tracking-widest">January 2025</span>
+                        <button onclick="shiftTargetMonthPointer(1)" class="p-2 rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                    </div>
+                </div>
+
+                <!-- Days Matrix Structural Renderer Node Container -->
+                <div>
+                    <div class="grid grid-cols-7 text-center mb-2 font-bold text-[10px] text-slate-500 uppercase tracking-widest">
+                        <span class="py-1">Sun</span><span class="py-1">Mon</span><span class="py-1">Tue</span><span class="py-1">Wed</span><span class="py-1">Thu</span><span class="py-1">Fri</span><span class="py-1">Sat</span>
+                    </div>
+                    <div id="calendarDisplayGrid" class="grid grid-cols-7 gap-2 text-center text-xs font-semibold">
+                        <!-- Calculated dynamically via native JavaScript loop maps -->
+                    </div>
+                </div>
+
+                <!-- Legend State Context -->
+                <div class="pt-4 border-t border-slate-800/60 flex flex-wrap gap-4 text-[11px] text-slate-400 font-medium">
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded bg-slate-800/60 border border-slate-700"></span> Base Sem Routine</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded bg-red-500/10 border border-red-500/20"></span> Final Exams</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded bg-emerald-500/10 border border-emerald-500/20"></span> Learning Breaks</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded bg-amber-500/10 border border-amber-500/20"></span> Malaysian Holiday</div>
+                </div>
+            </section>
+
+            <!-- CONTEXTUAL DAY INSPECTOR AND PLANNING LOGIC CELL -->
+            <section class="lg:col-span-5 space-y-6">
+                <div id="plannerTargetCard" class="bg-gradient-to-b from-slate-900/60 to-slate-900/10 border border-slate-800/80 rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="flex justify-between items-start">
+                        <div class="space-y-1">
+                            <h3 id="targetNodeDateText" class="font-bold text-lg text-white">Select Mapped Date</h3>
+                            <p id="targetNodeDayLabel" class="text-[10px] text-violet-400 font-bold uppercase tracking-widest">Awaiting Parameter</p>
+                        </div>
+                        <span id="targetNodeHolidayBadge" class="hidden text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold uppercase tracking-wider"></span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/50">
+                            <span class="text-[9px] font-bold text-slate-500 tracking-wider uppercase block mb-1">Target Academic Focus</span>
+                            <div id="nodeActivityField" class="text-xs text-slate-200 p-1 rounded font-medium transition-all">---</div>
+                        </div>
+
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/50">
+                            <span class="text-[9px] font-bold text-slate-500 tracking-wider uppercase block mb-1">Recommended Duration Metric</span>
+                            <div id="nodeDurationField" class="text-xs text-slate-200 p-1 rounded font-medium transition-all">---</div>
+                        </div>
+                    </div>
+
+                    <button id="saveCellStateBtn" onclick="commitTargetCellState()" class="hidden w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md cursor-pointer">
+                        <i class="fa-solid fa-file-shield mr-1"></i> Update Schedule Node
+                    </button>
+                </div>
+
+                <!-- MONTH PUBLIC HOLIDAYS RENDERING FEED -->
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-stopwatch text-amber-400 text-xs"></i> <span class="text-[11px] font-bold uppercase tracking-wider text-slate-300">Holidays in Current Month View</span></div>
+                    <div id="holidayDisplayFeed" class="space-y-2 max-h-36 overflow-y-auto text-xs text-slate-400"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- INTERACTIVE DOCUMENT VAULT AND FILE UPLOAD CENTRE -->
+        <section id="file-vault-anchor" class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <h3 class="font-bold text-base text-white uppercase tracking-wider">Engineering Artifacts & Project Reports Vault</h3>
+                    <p class="text-xs text-slate-400">Upload documentation, track lab reports, and preserve build specs directly inside localized framework memory banks.</p>
+                </div>
+                <button id="vaultUploadBtn" onclick="triggerVaultSelector()" class="hidden sm:inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow transition-all cursor-pointer"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Artifacts</button>
+            </div>
+
+            <div id="vaultGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Injected File Nodes Rendered Here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- WORKSPACE RUNTIME ENGINE LOGIC BLOCK -->
+    <script>
+        const MASTER_PASSKEY = "MO8989";
+        let userHasAdminRights = false;
+        let activeMonthPointer = 0; // index value 0-11
+        let targetedAnchorKey = "";
+
+        // COMPREHENSIVE INTERPRETER DICTIONARY FOR 2025 CALENDAR ENGINE MAPPING
+        const monthsConfig = [
+            { name: "January", maxDays: 31 }, { name: "February", maxDays: 28 }, { name: "March", maxDays: 31 },
+            { name: "April", maxDays: 30 }, { name: "May", maxDays: 31 }, { name: "June", maxDays: 30 },
+            { name: "July", maxDays: 31 }, { name: "August", maxDays: 31 }, { name: "September", maxDays: 30 },
+            { name: "October", maxDays: 31 }, { name: "November", maxDays: 30 }, { name: "December", maxDays: 31 }
+        ];
+
+        const weekLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+        const nativeHolidaysData = {
+            1: [{ d: 1, n: "New Year's Day" }, { d: 29, n: "Chinese New Year" }, { d: 30, n: "Chinese New Year Holiday" }],
+            2: [{ d: 11, n: "Thaipusam" }],
+            3: [{ d: 31, n: "Hari Raya Aidilfitri" }],
+            4: [{ d: 1, n: "Hari Raya Holiday" }],
+            5: [{ d: 1, n: "Labour Day" }, { d: 12, n: "Wesak Day" }],
+            6: [{ d: 2, n: "King's Birthday" }, { d: 7, n: "Hari Raya Haji" }, { d: 27, n: "Awal Muharram" }],
+            8: [{ d: 31, n: "National Day" }],
+            9: [{ d: 5, n: "Prophet Muhammad's Birthday" }, { d: 16, n: "Malaysia Day" }],
+            10: [{ d: 20, n: "Deepavali" }],
+            12: [{ d: 25, n: "Christmas" }]
+        };
+
+        // RUNTIME DEFAULT BACKING MAPPED STATE OBJECT STRUCTURE
+        let defaultInitialState = {
+            profile: {
+                name: "Mohamed Hassan",
+                course: "Computer and Communication System Engineering",
+                avatar: "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Felix&backgroundColor=b6e3f4"
+            },
+            settings: {
+                visibility: "public",
+                glow: "enabled"
+            },
+            mutatedScheduleNodes: {},
+            uploadedVaultFiles: [
+                { id: 101, title: "Lab 3 Spec - Error Correction Matrices.pdf", size: "4.2 MB", timestamp: "Core Base Sample Document" },
+                { id: 102, title: "Thesis Report - Communication Bus Nodes.docx", size: "12.8 MB", timestamp: "Core Base Sample Document" }
+            ]
+        };
+
+        let systemMemory = {};
+
+        // DEEPLINK INTEGRATION PARSER ENGINE
+        function initSystemMemoryWithURLStateFallbacks() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
+
+            if (encodedData) {
+                try {
+                    // Parse raw base64 string states safely back to runtime memory configurations
+                    const decodedString = decodeURIComponent(escape(atob(encodedData)));
+                    systemMemory = JSON.parse(decodedString);
+                    // Force the vector avatar to remain consistent
+                    systemMemory.profile.avatar = "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Felix&backgroundColor=b6e3f4";
+                    localStorage.setItem('eduSync_v4_sharableData', JSON.stringify(systemMemory));
+                    return;
+                } catch(err) {
+                    console.error("State decryption pipeline warning: fall back to local disk caches.", err);
+                }
+            }
+
+            // Fallback strategy path to Local Disk arrays or standard configurations initialization
+            systemMemory = JSON.parse(localStorage.getItem('eduSync_v4_sharableData')) || defaultInitialState;
+        }
+
+        // ALGORITHM: ZELLER'S CONGRUENCE NATIVE PORT MAPPED FROM C++ SPECIFICATION
+        function computeZellerMonthOffset(year, month) {
+            let q = 1; let m = month; let y = year;
+            if (m < 3) { m += 12; y--; }
+            let k = y % 100; let j = Math.floor(y / 100);
+            let h = (q + Math.floor((13 * (m + 1)) / 5) + k + Math.floor(k / 4) + Math.floor(j / 4) + (5 * j)) % 7;
+            return (h + 6) % 7;
+        }
+
+        // EVALUATOR COMPONENT CALCULATING TARGET DATE OBJECTIVE ACTIVITIES
+        function processCPlusPlusScheduleLogic(m, d, w) {
+            if ((m === 1 && d >= 27) || (m === 2 && d <= 2)) return { act: "Revision Week / Study Week", dur: "Strenuous Routine" };
+            if (m === 2 && d >= 3 && d <= 23) return { act: "FINAL EXAMINATION PERIOD", dur: "Maximum Revision Focus" };
+            if ((m === 2 && d >= 24) || (m === 3 && d <= 16)) {
+                let suffix = " + HTML/CSS (4 Hours)";
+                if (w === 1 || w === 5) return { act: "Normal Study Session" + suffix, dur: "6 Hours Total" };
+                if (w === 2 || w === 4) return { act: "Exercise" + suffix, dur: "5 Hours Total" };
+                if (w === 3) return { act: "Assignments" + suffix, dur: "7 Hours Total" };
+                if (w === 6) return { act: "Assignments + Exercise" + suffix, dur: "7 Hours Total" };
+                if (w === 0) return { act: "Rest / Revision" + suffix, dur: "5 Hours Total" };
+            }
+            if ((m === 6 && d >= 30) || (m === 7 && d <= 6)) return { act: "Revision Week / Study Week", dur: "Strenuous Routine" };
+            if (m === 7 && d >= 7 && d <= 24) return { act: "FINAL EXAMINATION PERIOD", dur: "Maximum Revision Focus" };
+            if ((m === 7 && d >= 2) || m === 8 || m === 9 || (m === 10 && d <= 12)) {
+                if (w === 1 || w === 5) return { act: "Python Intensive Study", dur: "3 - 5 Hours" };
+                if (w === 2 || w === 4) return { act: "Exercise", dur: "45 mins - 1 Hour" };
+                if (w === 3) return { act: "Assignments", dur: "2 - 4 Hours" };
+                if (w === 6) return { act: "Assignments + Exercise", dur: "2 - 4 Hours" };
+                if (w === 0) return { act: "Rest / Revision", dur: "1 - 2 Hours" };
+            }
+            if (w === 1 || w === 5) return { act: "Normal Study Session", dur: "2 - 3 Hours" };
+            if (w === 2 || w === 4) return { act: "Exercise", dur: "45 mins - 1 Hour" };
+            if (w === 3) return { act: "Assignments", dur: "2 - 4 Hours" };
+            if (w === 6) return { act: "Assignments + Exercise", dur: "2 - 4 Hours" };
+            return { act: "Rest / Revision", dur: "1 - 2 Hours" };
+        }
+
+        function generateInterfaceMatrix() {
+            const container = document.getElementById("calendarDisplayGrid");
+            container.innerHTML = "";
+            const monthConfigObj = monthsConfig[activeMonthPointer];
+            document.getElementById("currentMonthYearLabel").textContent = `${monthConfigObj.name} 2025`;
+            const gridShiftOffset = computeZellerMonthOffset(2025, activeMonthPointer + 1);
+
+            for (let i = 0; i < gridShiftOffset; i++) {
+                const nullCell = document.createElement("div");
+                nullCell.className = "h-11 opacity-0 pointer-events-none";
+                container.appendChild(nullCell);
+            }
+
+            for (let day = 1; day <= monthConfigObj.maxDays; day++) {
+                const cell = document.createElement("div");
+                const computedDayOfWeekIndex = (gridShiftOffset + day - 1) % 7;
+                const currentMonthValue = activeMonthPointer + 1;
+                const trackingKey = `${currentMonthValue}-${day}`;
+
+                let coreCalculatedProperties = processCPlusPlusScheduleLogic(currentMonthValue, day, computedDayOfWeekIndex);
+                let checkHolidayMatch = (nativeHolidaysData[currentMonthValue] || []).find(h => h.d === day);
+                let cellStructuralStyles = "bg-slate-900/40 text-slate-400 border-slate-800/80 hover:bg-slate-800/60";
+                
+                if (coreCalculatedProperties.act.includes("EXAMINATION")) {
+                    cellStructuralStyles = "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20";
+                } else if (coreCalculatedProperties.act.includes("HTML/CSS") || coreCalculatedProperties.act.includes("Python Intensive")) {
+                    cellStructuralStyles = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20";
+                } else if (coreCalculatedProperties.act.includes("Revision Week")) {
+                    cellStructuralStyles = "bg-violet-500/10 text-violet-400 border-violet-500/20 hover:bg-violet-500/20";
+                }
+                if (checkHolidayMatch) { cellStructuralStyles = "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20"; }
+
+                if (systemMemory.mutatedScheduleNodes[trackingKey] && systemMemory.settings.glow === "enabled") {
+                    cellStructuralStyles += " shadow-[0_0_15px_rgba(139,92,246,0.25)] border-violet-500/80 text-violet-200";
+                }
+
+                cell.className = `h-11 flex flex-col items-center justify-center rounded-xl border font-bold transition-all cursor-pointer ${cellStructuralStyles}`;
+                cell.innerHTML = `<span>${day}</span>${checkHolidayMatch ? '<span class="w-1 h-1 rounded-full bg-amber-400 mt-0.5"></span>' : ''}`;
+                cell.setAttribute("onclick", `selectPlannerTargetDate(${currentMonthValue}, ${day}, ${computedDayOfWeekIndex})`);
+                container.appendChild(cell);
+            }
+            renderPublicHolidayListing();
+        }
+
+        function selectPlannerTargetDate(m, d, w) {
+            targetedAnchorKey = `${m}-${d}`;
+            let defaultSpecs = processCPlusPlusScheduleLogic(m, d, w);
+            let checkHoliday = (nativeHolidaysData[m] || []).find(h => h.d === d);
+
+            document.getElementById("targetNodeDateText").textContent = `${monthsConfig[m-1].name} ${d}, 2025`;
+            document.getElementById("targetNodeDayLabel").textContent = weekLabels[w] + " Calendar State";
+
+            const badgeElement = document.getElementById("targetNodeHolidayBadge");
+            if (checkHoliday) {
+                badgeElement.textContent = checkHoliday.n;
+                badgeElement.classList.remove("hidden");
+            } else {
+                badgeElement.classList.add("hidden");
+            }
+
+            let modifiedDataInstance = systemMemory.mutatedScheduleNodes[targetedAnchorKey] || {};
+            document.getElementById("nodeActivityField").textContent = modifiedDataInstance.act || defaultSpecs.act;
+            document.getElementById("nodeDurationField").textContent = modifiedDataInstance.dur || defaultSpecs.dur;
+        }
+
+        function renderPublicHolidayListing() {
+            const feed = document.getElementById("holidayDisplayFeed"); feed.innerHTML = "";
+            const currentArray = nativeHolidaysData[activeMonthPointer + 1] || [];
+            if (currentArray.length === 0) {
+                feed.innerHTML = `<p class="italic text-slate-600 p-1">No structural public holidays found.</p>`; return;
+            }
+            currentArray.forEach(h => {
+                feed.innerHTML += `
+                    <div class="flex items-center justify-between p-2 bg-slate-950/40 border border-slate-800/60 rounded-xl">
+                        <span class="font-semibold text-slate-300 text-[11px]">${h.n}</span>
+                        <span class="text-[9px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">${monthsConfig[activeMonthPointer].name} ${h.d}</span>
+                    </div>`;
+            });
+        }
+
+        function generateVaultDirectoryHTML() {
+            const grid = document.getElementById("vaultGrid"); grid.innerHTML = "";
+            if (systemMemory.uploadedVaultFiles.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-6 text-slate-500 text-xs italic">Vault contains no file entities. Click upload to register works.</div>`; return;
+            }
+            systemMemory.uploadedVaultFiles.forEach(file => {
+                grid.innerHTML += `
+                    <div class="p-4 bg-slate-900/60 border border-slate-800/80 rounded-2xl flex items-start gap-3 hover:border-slate-700 transition-all relative group">
+                        <div class="p-3 bg-slate-950 rounded-xl text-violet-400 border border-slate-800/50"><i class="fa-solid fa-file-invoice text-base"></i></div>
+                        <div class="space-y-0.5 w-[75%]">
+                            <h4 class="text-xs font-bold text-slate-200 truncate pr-4" title="${file.title}">${file.title}</h4>
+                            <p class="text-[10px] text-slate-500 font-semibold">${file.size} • <span class="text-slate-400">${systemMemory.settings.visibility.toUpperCase()}</span></p>
+                        </div>
+                        <button onclick="purgeVaultFileInstance(${file.id})" class="hidden ${userHasAdminRights ? 'group-hover:flex' : 'hidden'} absolute top-3 right-3 text-slate-500 hover:text-red-400 transition-colors text-xs cursor-pointer"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </div>`;
+            });
+        }
+
+        // AUTH LOCK CONTROLLER INTERFACE ROUTINES
+        function executeSystemAuthenticationRoutine() {
+            if (!userHasAdminRights) {
+                const userKeyInput = prompt("Provide System Operator Authentication Passkey:");
+                if (userKeyInput === MASTER_PASSKEY) {
+                    userHasAdminRights = true;
+                    document.getElementById("authWidgetText").textContent = "Lock System & Generate Share Link";
+                    document.getElementById("lockWidgetIcon").className = "fa-solid fa-unlock text-emerald-400";
+                    document.getElementById("adminBadgeView").classList.remove("hidden");
+                    document.getElementById("saveCellStateBtn").classList.remove("hidden");
+                    document.getElementById("vaultUploadBtn").classList.remove("hidden");
+                    document.getElementById("profileBox").classList.add("admin-glow");
+                    document.getElementById("shareLinkContainer").classList.add("hidden");
+
+                    toggleDomFieldsEditAccess(true);
+                } else {
+                    alert("Authentication structural fault. Secure access denied.");
+                }
+            } else {
+                commitProfileHeaderMutations();
+                userHasAdminRights = false;
+                
+                // SERIALIZATION CORE: Package text parameters clean to Base64 format string values
+                const stateString = JSON.stringify(systemMemory);
+                const encodedState = btoa(unescape(encodeURIComponent(stateString)));
+                
+                // Write URL parameters directly to current window frame history
+                const dynamicSharableURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?data=' + encodedState;
+                window.history.replaceState({ path: dynamicSharableURL }, '', dynamicSharableURL);
+
+                // Show share links block
+                document.getElementById("shareLinkContainer").classList.remove("hidden");
+                
+                document.getElementById("authWidgetText").textContent = "Unlock Workspace";
+                document.getElementById("lockWidgetIcon").className = "fa-solid fa-lock text-amber-500";
+                document.getElementById("adminBadgeView").classList.add("hidden");
+                document.getElementById("saveCellStateBtn").classList.add("hidden");
+                document.getElementById("vaultUploadBtn").classList.add("hidden");
+                document.getElementById("profileBox").classList.remove("admin-glow");
+
+                toggleDomFieldsEditAccess(false);
+                alert("Workspace locked down. Your custom parameters have been written into the address link bar!");
+            }
+        }
+
+        function toggleDomFieldsEditAccess(allowWrite) {
+            const nameEl = document.getElementById("profileName");
+            const courseEl = document.getElementById("profileCourse");
+            const actField = document.getElementById("nodeActivityField");
+            const durField = document.getElementById("nodeDurationField");
+            const visSelect = document.getElementById("settingVisibility");
+            const glowSelect = document.getElementById("settingGlow");
+
+            if (allowWrite) {
+                nameEl.contentEditable = "true"; nameEl.classList.add("editable-active");
+                courseEl.contentEditable = "true"; courseEl.classList.add("editable-active");
+                actField.contentEditable = "true"; actField.classList.add("editable-active");
+                durField.contentEditable = "true"; durField.classList.add("editable-active");
+                visSelect.removeAttribute("disabled"); glowSelect.removeAttribute("disabled");
+            } else {
+                nameEl.contentEditable = "false"; nameEl.classList.remove("editable-active");
+                courseEl.contentEditable = "false"; courseEl.classList.remove("editable-active");
+                actField.contentEditable = "false"; actField.classList.remove("editable-active");
+                durField.contentEditable = "false"; durField.classList.remove("editable-active");
+                visSelect.setAttribute("disabled", "true"); glowSelect.setAttribute("disabled", "true");
+            }
+        }
+
+        function copyShareableLinkToClipboard() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Sharable Portfolio URL has been copied directly to your clipboard! Send it anywhere.");
+        }
+
+        function commitProfileHeaderMutations() {
+            systemMemory.profile.name = document.getElementById("profileName").textContent.trim();
+            systemMemory.profile.course = document.getElementById("profileCourse").textContent.trim();
+            saveSystemMemoryState();
+        }
+
+        function mutateGlobalSetting(param, targetVal) {
+            systemMemory.settings[param] = targetVal;
+            saveSystemMemoryState();
+            if (param === 'glow') generateInterfaceMatrix();
+        }
+
+        function commitTargetCellState() {
+            if (!targetedAnchorKey) return;
+            systemMemory.mutatedScheduleNodes[targetedAnchorKey] = {
+                act: document.getElementById("nodeActivityField").textContent.trim(),
+                dur: document.getElementById("nodeDurationField").textContent.trim()
+            };
+            saveSystemMemoryState();
+            generateInterfaceMatrix();
+            alert("Node updated locally.");
+        }
+
+        function triggerVaultSelector() { document.getElementById("vaultInput").click(); }
+
+        function processVaultFilesUpload(input) {
+            if (input.files.length > 0) {
+                for(let i=0; i<input.files.length; i++) {
+                    let file = input.files[i];
+                    let sizeText = (file.size / (1024*1024)).toFixed(1) + " MB";
+                    systemMemory.uploadedVaultFiles.unshift({
+                        id: Date.now() + i,
+                        title: file.name,
+                        size: sizeText,
+                        timestamp: new Date().toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'})
+                    });
+                }
+                saveSystemMemoryState();
+                generateVaultDirectoryHTML();
+            }
+        }
+
+        function purgeVaultFileInstance(id) {
+            systemMemory.uploadedVaultFiles = systemMemory.uploadedVaultFiles.filter(f => f.id !== id);
+            saveSystemMemoryState();
+            generateVaultDirectoryHTML();
+        }
+
+        function shiftTargetMonthPointer(direction) {
+            activeMonthPointer += direction;
+            if (activeMonthPointer < 0) activeMonthPointer = 11;
+            if (activeMonthPointer > 11) activeMonthPointer = 0;
+            generateInterfaceMatrix();
+        }
+
+        function saveSystemMemoryState() {
+            localStorage.setItem('eduSync_v4_sharableData', JSON.stringify(systemMemory));
+        }
+
+        function bootstrapPlatformData() {
+            initSystemMemoryWithURLStateFallbacks();
+
+            document.getElementById("profileName").textContent = systemMemory.profile.name;
+            document.getElementById("profileCourse").textContent = systemMemory.profile.course;
+            document.getElementById("userAvatar").src = systemMemory.profile.avatar;
+            document.getElementById("settingVisibility").value = systemMemory.settings.visibility;
+            document.getElementById("settingGlow").value = systemMemory.settings.glow;
+
+            generateInterfaceMatrix();
+            generateVaultDirectoryHTML();
+            selectPlannerTargetDate(1, 1, computeZellerMonthOffset(2025, 1));
+        }
+
+        document.addEventListener("DOMContentLoaded", bootstrapPlatformData);
+    </script>
+</body>
+</html>
